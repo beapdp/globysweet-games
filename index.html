@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globysweet - ¡Juegos para tu Fiesta!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de colores extraída del logo de Globysweet */
+        :root {
+            --brand-pink: #F78AAB;
+            --brand-yellow: #FDE47F;
+            --brand-blue: #89CFF0;
+            --brand-brown: #6B4F4B;
+            --brand-bg: #FFFDF7;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--brand-bg);
+            color: var(--brand-brown);
+        }
+        .filter-btn {
+            background-color: white;
+            color: var(--brand-brown);
+            border: 2px solid var(--brand-pink);
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--brand-pink);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .game-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f0e9e9;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(107, 79, 75, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            font-size: 1.5rem; line-height: 1;
+            cursor: pointer; color: #9ca3af;
+        }
+        .download-button {
+            display: inline-block;
+            margin-top: 1rem;
+            background-color: var(--brand-pink);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .download-button:hover {
+            background-color: #E66C90;
+        }
+        .footer-link {
+            background-color: var(--brand-yellow);
+            color: var(--brand-brown);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+        .footer-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center my-8">
+            <!-- INSTRUCCIÓN: Reemplaza la URL de la imagen con la URL de tu logo subido a un servidor -->
+            <img src="globysweet (4).svg" alt="Logo de Globysweet" class="mx-auto w-48 md:w-64">
+        </header>
+
+        <main>
+            <section id="welcome" class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2" style="color: var(--brand-brown);">¡Que empiece la Diversión!</h1>
+                <p class="text-lg text-gray-600">Aquí tienes un montón de ideas para que tu fiesta sea inolvidable.</p>
+            </section>
+
+            <section id="filters" class="mb-10">
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+                    <button class="filter-btn active font-semibold py-2 px-4 rounded-full" data-filter="all">Todos los Juegos</button>
+                    <button class="filter-btn font-semibold py-2 px-4 rounded-full" data-filter="globo">🎈 Con Globo</button>
+                    <button class="filter-btn font-semibold py-2 px-4 rounded-full" data-filter="movimiento">😂 De Movimiento</button>
+                    <button class="filter-btn font-semibold py-2 px-4 rounded-full" data-filter="chuches">🍬 Con Chuches</button>
+                    <button class="filter-btn font-semibold py-2 px-4 rounded-full" data-filter="tranquilos">🧠 Tranquilos</button>
+                    <button class="filter-btn font-semibold py-2 px-4 rounded-full" data-filter="extras">🎁 Extras</button>
+                </div>
+            </section>
+
+            <section id="games-grid">
+                <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    <!-- Tarjetas de Juegos (generadas por JS) -->
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-16 pt-8 pb-8 border-t-2 border-dashed" style="border-color: var(--brand-yellow);">
+            <h3 class="text-2xl font-bold" style="color: var(--brand-brown);">Globysweet</h3>
+            <p class="text-gray-500 mt-2 mb-6">La chispa que enciende tu fiesta.</p>
+            <a href="#" class="footer-link">Visita nuestra tienda</a>
+            <p class="text-xs text-gray-400 mt-8">© 2025 Globysweet. Todos los derechos reservados.</p>
+        </footer>
+
+    </div>
+
+    <!-- Contenedor del Modal -->
+    <div id="modal-container" class="modal-overlay">
+        <div id="modal-content-box" class="modal-content">
+             <span id="modal-close-btn" class="modal-close-btn">&times;</span>
+             <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+    const gameData = [
+        { id: 'que-no-caiga', title: '¡Que no caiga!', category: 'globo', emoji: '🎈', age: '3+', materials: 'Uno o varios globos', rules: 'El objetivo es mantener el globo en el aire el mayor tiempo posible golpeándolo con cualquier parte del cuerpo. Se puede jugar de forma individual (cada uno con su globo) o cooperativa (todos juntos para que un solo globo no toque el suelo).' },
+        { id: 'globo-loco', title: 'Globo Loco', category: 'globo', emoji: '🤪', age: '6+', materials: 'Un globo y una cuerda corta para cada niño', rules: 'Cada niño se ata el globo a la muñeca o al tobillo. A la señal, todos deben intentar pisar o golpear el globo de los demás para reventarlo, mientras protegen el suyo. El último con el globo intacto gana.' },
+        { id: 'tenis-globo', title: 'Tenis de Globo', category: 'globo', emoji: '🎾', age: '5+', materials: 'Un globo, platos de cartón y palos de helado', rules: 'Se crean raquetas pegando un palo a cada plato. Por parejas o equipos, los jugadores deben pasarse el globo golpeándolo con las raquetas, sin que toque el suelo.' },
+        { id: 'sillas-musicales', title: 'Sillas Musicales', category: 'movimiento', emoji: '🎶', age: '5+', materials: 'Sillas (una menos que el número de jugadores) y música', rules: 'Los niños caminan alrededor de las sillas mientras suena la música. Cuando para, todos deben sentarse. El que se queda sin silla, queda eliminado. Se quita una silla y se repite hasta que solo quede un ganador.' },
+        { id: 'baile-estatua', title: 'El Baile de la Estatua', category: 'movimiento', emoji: '🕺', age: '3+ ', materials: 'Música animada', rules: 'Todos bailan mientras suena la música. Cuando se detiene, deben quedarse completamente inmóviles. El primero que se mueva queda eliminado.' },
+        { id: 'panuelo', title: 'El Pañuelo', category: 'movimiento', emoji: '🏳️', age: '6+', materials: 'Un pañuelo', rules: 'Se forman dos equipos y se asigna un número a cada jugador de cada equipo. Un adulto en el centro sostiene el pañuelo y grita un número. Los dos jugadores con ese número corren para coger el pañuelo y llevarlo a su base sin ser pillados.' },
+        { id: 'simon-dice', title: 'Simón Dice', category: 'movimiento', emoji: '🗣️', age: '4+', materials: 'Ninguno', rules: 'Un jugador es "Simón" y da órdenes. Los demás solo deben obedecer las órdenes que empiecen con la frase "Simón dice...". Si la orden no lleva esa frase y un jugador la hace, queda eliminado.' },
+        { id: 'busqueda-tesoro', title: 'Búsqueda del Tesoro', category: 'tranquilos', emoji: '🗺️', age: '4+', materials: 'Pistas y un "tesoro" final (chuches)', rules: 'Se esconde el tesoro y se crea una serie de pistas que lleven de un lugar a otro hasta encontrar el premio final.' },
+        { id: 'telefono', title: 'Teléfono Escacharrado', category: 'tranquilos', emoji: '🤫', age: '5+', materials: 'Ninguno', rules: 'Los niños se sientan en fila. El primero inventa una frase y se la susurra al de al lado. El mensaje se va pasando de uno a otro. El último lo dice en voz alta. ¡Las risas están aseguradas!' },
+        { id: 'carrera-cucharas', title: 'Carrera de Cucharas', category: 'chuches', emoji: '🥄', age: '5+', materials: 'Cucharas y chuches Globysweet', rules: 'Por relevos o individualmente, los niños deben llevar una chuchería sobre una cuchara hasta la meta sin que se caiga.' },
+        { id: 'pesca-chuches', title: 'Pesca de Chuches', category: 'chuches', emoji: '🎣', age: '5+', materials: 'Un plato, gominolas y pajitas', rules: 'Los niños deben "pescar" las gominolas de un plato usando solo la succión de una pajita y llevarlas a su montón sin usar las manos.' },
+        { id: 'diploma', title: 'Diploma Imprimible', category: 'extras', emoji: '🏆', age: 'Todos', materials: 'Impresora y papel', rules: '¡Un recuerdo especial de la fiesta! Haz clic para ver el diploma, y luego descárgalo para imprimirlo y rellenarlo con el nombre del campeón o campeona de la fiesta.' },
+        { id: 'dibujo', title: 'Dibujo para Colorear', category: 'extras', emoji: '🎨', age: 'Todos', materials: 'Impresora, papel y lápices de colores', rules: 'Una actividad tranquila y creativa. Haz clic para ver el dibujo de nuestro amigo Globy, y luego descárgalo para que los peques le den vida con sus colores favoritos.' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('grid');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const modalContainer = document.getElementById('modal-container');
+        const modalBody = document.getElementById('modal-body');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        function renderCards(filter = 'all') {
+            grid.innerHTML = '';
+            const filteredData = (filter === 'all') ? gameData : gameData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'game-card p-4 text-center flex flex-col items-center justify-center';
+                card.setAttribute('data-id', item.id);
+                card.innerHTML = `
+                    <div class="text-4xl md:text-5xl mb-3">${item.emoji}</div>
+                    <h3 class="font-bold text-sm md:text-base" style="color: var(--brand-brown);">${item.title}</h3>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(id) {
+            const item = gameData.find(d => d.id === id);
+            if (!item) return;
+
+            let contentHTML = '';
+            if (item.category === 'extras') {
+                if (item.id === 'diploma') {
+                    contentHTML = `
+                        <div id="diploma-content" class="p-4 border-4 border-dashed" style="border-color: var(--brand-yellow); background-color: #FEFBF0;">
+                            <h3 class="text-3xl font-bold text-center" style="color: var(--brand-brown); font-family: 'Brush Script MT', cursive;">Diploma</h3>
+                            <p class="my-2 text-lg text-center">Otorgado a:</p>
+                            <div class="w-3/4 h-8 bg-white border-b-2 border-gray-400 mx-auto my-4"></div>
+                            <p class="my-2 text-lg text-center">Por ser el/la</p>
+                            <h4 class="text-2xl font-bold text-center" style="color: var(--brand-pink);">Mejor Fiestero/a del Año</h4>
+                            <div class="mt-6 text-sm text-center">
+                                <p class="font-bold">Globysweet</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button class="download-button" data-download-target="diploma-content">Descargar Diploma</button>
+                        </div>`;
+                } else if (item.id === 'dibujo') {
+                     contentHTML = `
+                        <div id="dibujo-content" class="p-4 border-2 bg-white" style="border-color: var(--brand-brown);">
+                           <h3 class="text-2xl font-bold mb-4 text-center" style="color: var(--brand-brown);">¡Colorea a Globy!</h3>
+                           <div class="aspect-square w-full flex items-center justify-center">
+                               <img src="https://storage.googleapis.com/gemini-generative-ai-public-data/globysweet_coloring.png" alt="Dibujo de Globy para colorear" class="w-full h-full object-contain">
+                           </div>
+                        </div>
+                        <div class="text-center">
+                           <button class="download-button" data-download-target="dibujo-content">Descargar Dibujo</button>
+                        </div>`;
+                }
+            } else {
+                contentHTML = `
+                    <h2 class="text-2xl md:text-3xl font-bold text-center mb-4" style="color: var(--brand-pink);">${item.emoji} ${item.title}</h2>
+                    <div class="text-left space-y-4">
+                        <div><strong style="color: var(--brand-brown);">Edad recomendada:</strong> ${item.age}</div>
+                        <div><strong style="color: var(--brand-brown);">Materiales:</strong> ${item.materials}</div>
+                        <div><strong style="color: var(--brand-brown);">Cómo se juega:</strong><p class="mt-1 text-gray-600">${item.rules}</p></div>
+                    </div>
+                `;
+            }
+            
+            modalBody.innerHTML = contentHTML;
+            modalContainer.classList.add('visible');
+
+            const downloadBtn = modalBody.querySelector('.download-button');
+            if(downloadBtn){
+                downloadBtn.addEventListener('click', () => {
+                    const downloadTargetId = downloadBtn.getAttribute('data-download-target');
+                    const elementToDownload = document.getElementById(downloadTargetId);
+                    if(elementToDownload){
+                        html2canvas(elementToDownload, { backgroundColor: item.id === 'diploma' ? '#FEFBF0' : '#FFFFFF' }).then(canvas => {
+                            const link = document.createElement('a');
+                            link.download = `${downloadTargetId}.png`;
+                            link.href = canvas.toDataURL();
+                            link.click();
+                        });
+                    }
+                });
+            }
+        }
+
+        function closeModal() {
+            modalContainer.classList.remove('visible');
+        }
+
+        grid.addEventListener('click', (e) => {
+            const card = e.target.closest('.game-card');
+            if (card) {
+                const id = card.getAttribute('data-id');
+                openModal(id);
+            }
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const filter = button.getAttribute('data-filter');
+                renderCards(filter);
+            });
+        });
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalContainer.addEventListener('click', (e) => {
+            if (e.target === modalContainer) {
+                closeModal();
+            }
+        });
+
+        renderCards();
+    });
+    </script>
+</body>
+</html>
